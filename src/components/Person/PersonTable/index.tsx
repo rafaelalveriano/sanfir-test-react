@@ -1,35 +1,43 @@
-import * as React from 'react'
-import { DataGrid, ColDef } from '@material-ui/data-grid'
+import React from 'react'
+import { DataGrid, ColDef, SelectionChangeParams } from '@material-ui/data-grid'
 import Grid from '@material-ui/core/Grid'
+import { PersonTypeRowsTable, PersonType } from '../PersonType'
 
 const columns: ColDef[] = [
-  { field: 'name', headerName: 'Nome', width: 130 },
-  { field: 'email', headerName: 'Email', width: 130 },
-  { field: 'birthdata', headerName: 'Data de Nasc.', width: 130 },
-  { field: 'city', headerName: 'Cidade', width: 130 },
-  { field: 'uf', headerName: 'UF', width: 130 },
+  { field: 'name', headerName: 'Nome', width: 280 },
+  { field: 'email', headerName: 'Email', width: 280 },
+  { field: 'birthdata', headerName: 'Data de Nasc.', width: 180 },
+  { field: 'uf', headerName: 'UF', width: 80 },
+  { field: 'city', headerName: 'Cidade', width: 280 },
 ]
 
-const rows = [
-  {
-    id: 1,
-    name: 'Rafael Augusto',
-    email: 'teste@teste.com',
-    birthdata: '18/19/2020',
-    city: 'Araxá',
-    uf: 'MG',
-  },
-  {
-    id: 2,
-    name: 'Rafael Augusto',
-    email: 'teste@teste.com',
-    birthdata: '18/19/2020',
-    city: 'Araxá',
-    uf: 'MG',
-  },
-]
+const createRowPersons = (persons: PersonType[]) => {
+  const arrayPersons: PersonTypeRowsTable[] = []
+  persons.map((person) =>
+    arrayPersons.push({
+      id: person._id || '',
+      name: person.name,
+      email: person.email,
+      birthdata: person.birthdata,
+      uf: person.uf,
+      city: person.city,
+    }),
+  )
 
-export default function DataTable() {
+  return arrayPersons
+}
+
+interface Props {
+  setIdsSelecteds: React.Dispatch<React.SetStateAction<React.ReactText[]>>
+  persons: PersonType[]
+}
+
+const PersonTable: React.FC<Props> = ({ setIdsSelecteds, persons }) => {
+  const handleSelectRow = (param: SelectionChangeParams) => {
+    const ids = param.rowIds
+    setIdsSelecteds(ids)
+  }
+
   return (
     <Grid
       container
@@ -40,12 +48,14 @@ export default function DataTable() {
     >
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
-          rows={rows}
+          rows={createRowPersons(persons)}
           columns={columns}
           pageSize={5}
           checkboxSelection
+          onSelectionChange={handleSelectRow}
         />
       </div>
     </Grid>
   )
 }
+export default PersonTable

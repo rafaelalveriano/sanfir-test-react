@@ -75,6 +75,32 @@ const PersonForm: React.FC<Props> = ({ handleSubmit, update, formState }) => {
                     component="span"
                   />
                 </Grid>
+
+                {update && (
+                  <>
+                    <Grid item md={12} sm={12}>
+                      <CustomTextField label="UF*" name="uf" type="text" />
+                      <ErrorMessage
+                        name="uf"
+                        className="error"
+                        component="span"
+                      />
+                    </Grid>
+                    <Grid item md={12} sm={12}>
+                      <CustomTextField
+                        label="Cidade*"
+                        name="city"
+                        type="text"
+                      />
+                      <ErrorMessage
+                        name="city"
+                        className="error"
+                        component="span"
+                      />
+                    </Grid>
+                  </>
+                )}
+
                 <Grid item md={12} sm={12}>
                   <SelectUf
                     changed={(value: string) => {

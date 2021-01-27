@@ -1,6 +1,7 @@
 import axios from 'axios'
+import header from './Header'
 
-const HOSTAPI = 'http://localhost:3000/api/'
+const HOSTAPI = 'http://localhost:3001/api/'
 
 const HttpClient = (url?: string) => ({
   get: async (path: string) =>
@@ -9,8 +10,11 @@ const HttpClient = (url?: string) => ({
   post: async (path: string, data: any) =>
     await axios.post(url ? `${url}${path}` : `${HOSTAPI}${path}`, data),
 
-  remove: async (path: string) =>
-    await axios.delete(url ? `${url}${path}` : `${HOSTAPI}${path}`),
+  remove: async (path: string, data: any) =>
+    await axios.delete(url ? `${url}${path}` : `${HOSTAPI}${path}`, {
+      headers: header,
+      data,
+    }),
 
   update: async (path: string, data: any) =>
     await axios.put(url ? `${url}${path}` : `${HOSTAPI}${path}`, data),
