@@ -1,13 +1,15 @@
 import React from 'react'
-import { Layout } from '../common'
+import { Layout, Load } from '../common'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Container from '@material-ui/core/Container'
+import { isEmpty } from 'lodash'
 import PaperInfo from './PaperInfo'
 import { Group, CallReceived, CallMade, Assessment } from '@material-ui/icons'
 import List from './List'
 import { HttpClient } from '../../services'
 import { PersonType } from '../Person/PersonType'
+import handleBirthdata from './handleBirthdata'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,15 +26,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const agesAverage = (ages: number[]) => {
+  if (isEmpty(ages)) return 0
+  let soma = 0
+  for (let i in ages) {
+    soma += ages[i]
+  }
+  const media = soma / ages.length
+  return media.toFixed(1)
+}
+
+const smallerAge = (ages: number[]) => (isEmpty(ages) ? 0 : Math.min(...ages))
+
+const biggerAge = (ages: number[]) => (isEmpty(ages) ? 0 : Math.max(...ages))
+
 const Dash = () => {
   const classes = useStyles()
   const [persons, setPersons] = React.useState<PersonType[]>([])
+  const [ages, setAges] = React.useState<number[]>([])
+  const [load, setLoad] = React.useState<boolean>(false)
 
   React.useEffect(() => {
+    setLoad(true)
     let isMounted = true
     const fetchPersons = async () => {
       const { data } = await HttpClient().get('person')
       setPersons(data)
+      setLoad(false)
     }
     isMounted && fetchPersons()
     return () => {
@@ -41,18 +61,10 @@ const Dash = () => {
   }, [])
 
   React.useEffect(() => {
-    birthdateToAge(persons)
+    const ages = handleBirthdata(persons)
+    console.log(ages)
+    setAges(ages)
   }, [persons])
-
-  const birthdateToAge = (persons: PersonType[]) => {
-    const age = []
-    const year = new Date().getFullYear()
-
-    persons.map((person) => {
-      const age = person.birthdata.split('-')[0]
-      console.log(age)
-    })
-  }
 
   return (
     <Layout title="Painel">
@@ -65,12 +77,20 @@ const Dash = () => {
                 title="Total de pessoas"
                 qtd={persons.length.toString()}
               />
-              <PaperInfo icon={<CallReceived />} title="Menor idade" qtd="18" />
-              <PaperInfo icon={<CallMade />} title="Maior idade" qtd="18" />
+              <PaperInfo
+                icon={<CallReceived />}
+                title="Menor idade"
+                qtd={smallerAge(ages).toString()}
+              />
+              <PaperInfo
+                icon={<CallMade />}
+                title="Maior idade"
+                qtd={biggerAge(ages).toString()}
+              />
               <PaperInfo
                 icon={<Assessment />}
                 title="Media de idades"
-                qtd="18"
+                qtd={agesAverage(ages).toString()}
               />
             </div>
           </Grid>
@@ -78,6 +98,7 @@ const Dash = () => {
             <List persons={persons} />
           </Grid>
         </Grid>
+        <Load open={load} />
       </Container>
     </Layout>
   )

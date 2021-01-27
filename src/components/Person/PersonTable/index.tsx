@@ -2,6 +2,7 @@ import React from 'react'
 import { DataGrid, ColDef, SelectionChangeParams } from '@material-ui/data-grid'
 import Grid from '@material-ui/core/Grid'
 import { PersonTypeRowsTable, PersonType } from '../PersonType'
+import { FormatDate } from '../../../utils'
 
 const columns: ColDef[] = [
   { field: 'name', headerName: 'Nome', width: 280 },
@@ -18,7 +19,7 @@ const createRowPersons = (persons: PersonType[]) => {
       id: person._id || '',
       name: person.name,
       email: person.email,
-      birthdata: person.birthdata,
+      birthdata: FormatDate(person.birthdata),
       uf: person.uf,
       city: person.city,
     }),

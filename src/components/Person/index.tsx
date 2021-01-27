@@ -17,9 +17,11 @@ const Person = () => {
   const [idsSelecteds, setIdsSelecteds] = React.useState<ReactText[]>([])
 
   React.useEffect(() => {
+    setLoad(true)
     const fetchPersons = async () => {
       const { data } = await HttpClient().get('person')
       setPersons(data)
+      setLoad(false)
     }
     fetchPersons()
   }, [])
