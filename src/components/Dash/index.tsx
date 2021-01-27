@@ -8,6 +8,7 @@ import { Group, CallReceived, CallMade, Assessment } from '@material-ui/icons'
 import List from './List'
 import { HttpClient } from '../../services'
 import { PersonType } from '../Person/PersonType'
+import handleBirthdate from './handleBirthdate'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,9 +25,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const averageAges = (ages: number[]) => {
+  let soma = 0
+  for (let i in ages) {
+    soma += ages[i]
+  }
+  const media = soma / ages.length
+  return media.toFixed(1).toString()
+}
+
 const Dash = () => {
   const classes = useStyles()
   const [persons, setPersons] = React.useState<PersonType[]>([])
+  const [ages, setAges] = React.useState<number[]>([])
 
   React.useEffect(() => {
     let isMounted = true
@@ -41,18 +52,10 @@ const Dash = () => {
   }, [])
 
   React.useEffect(() => {
-    birthdateToAge(persons)
+    const ages = handleBirthdate(persons)
+    console.log(ages)
+    setAges(ages)
   }, [persons])
-
-  const birthdateToAge = (persons: PersonType[]) => {
-    const age = []
-    const year = new Date().getFullYear()
-
-    persons.map((person) => {
-      const age = person.birthdata.split('-')[0]
-      console.log(age)
-    })
-  }
 
   return (
     <Layout title="Painel">
@@ -65,12 +68,20 @@ const Dash = () => {
                 title="Total de pessoas"
                 qtd={persons.length.toString()}
               />
-              <PaperInfo icon={<CallReceived />} title="Menor idade" qtd="18" />
-              <PaperInfo icon={<CallMade />} title="Maior idade" qtd="18" />
+              <PaperInfo
+                icon={<CallReceived />}
+                title="Menor idade"
+                qtd={Math.min(...ages).toString()}
+              />
+              <PaperInfo
+                icon={<CallMade />}
+                title="Maior idade"
+                qtd={Math.max(...ages).toString()}
+              />
               <PaperInfo
                 icon={<Assessment />}
                 title="Media de idades"
-                qtd="18"
+                qtd={averageAges(ages)}
               />
             </div>
           </Grid>
