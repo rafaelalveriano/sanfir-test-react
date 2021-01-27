@@ -11,14 +11,14 @@ const LinksDrawer = () => {
   const goTo = (page: string) => history.push(page)
   return (
     <List>
-      <ListItem button>
+      <ListItem button onClick={() => goTo('/')}>
         <ListItemIcon>
           <HomeIcon />
         </ListItemIcon>
         <ListItemText primary="Painel" />
       </ListItem>
 
-      <ListItem button>
+      <ListItem button onClick={() => goTo('/person')}>
         <ListItemIcon>
           <GroupIcon />
         </ListItemIcon>

@@ -12,7 +12,12 @@ import useStyles from './styleDrawer'
 import Toolbar from './Toolbar'
 import Links from './Links'
 
-export default function MiniDrawer() {
+interface DrawerProps {
+  title: string
+  children: React.ReactChild | React.ReactChildren
+}
+
+const MenuDrawer: React.FC<DrawerProps> = ({ title, children }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -34,7 +39,11 @@ export default function MiniDrawer() {
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar title="Dash" handleDrawerOpen={handleDrawerOpen} open={open} />
+        <Toolbar
+          title={title}
+          handleDrawerOpen={handleDrawerOpen}
+          open={open}
+        />
       </AppBar>
       <Drawer
         variant="permanent"
@@ -63,7 +72,9 @@ export default function MiniDrawer() {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        {children}
       </main>
     </div>
   )
 }
+export default MenuDrawer

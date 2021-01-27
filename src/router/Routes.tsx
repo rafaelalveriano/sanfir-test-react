@@ -7,6 +7,7 @@ const Routes: React.FC = () => {
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Component.Dash} />
+        <Route exact path="/person" component={Component.Person} />
       </Switch>
     </BrowserRouter>
   )
