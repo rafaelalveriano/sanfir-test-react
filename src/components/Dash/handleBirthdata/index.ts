@@ -17,7 +17,7 @@ const calculateAge = (bd: Date) => {
   return years
 }
 
-const birthdateToAge = (persons: PersonType[]) => {
+const birthdataToAge = (persons: PersonType[]) => {
   let ages: number[] = []
 
   persons.map((person) => ages.push(calculateAge(new Date(person.birthdata))))
@@ -25,4 +25,4 @@ const birthdateToAge = (persons: PersonType[]) => {
   return ages
 }
 
-export default birthdateToAge
+export default birthdataToAge
