@@ -62,7 +62,6 @@ const Dash = () => {
 
   React.useEffect(() => {
     const ages = handleBirthdata(persons)
-    console.log(ages)
     setAges(ages)
   }, [persons])
 
